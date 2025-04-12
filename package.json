@@ -1,0 +1,33 @@
+{
+    "name": "mini-url",
+    "version": "1.0.0",
+    "description": "",
+    "repository": "https://github.com/t7abhay/mini-url",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "start": "node --watch env-file .env ",
+        "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
+    },
+    "keywords": [],
+    "author": "abhay",
+    "license": "ISC",
+    "packageManager": "pnpm@10.8.0",
+    "dependencies": {
+        "body-parser": "^2.2.0",
+        "dotenv": "^16.5.0",
+        "express": "^5.1.0",
+        "express-response-time": "^0.0.6",
+        "ioredis": "^5.6.1",
+        "mongoose": "^8.13.2",
+        "multer": "1.4.5-lts.2",
+        "mysql2": "^3.14.0",
+        "nodemon": "^3.1.9",
+        "oracledb": "^6.8.0",
+        "pg": "^8.14.1",
+        "pg-hstore": "^2.3.4",
+        "response-time": "^2.3.3",
+        "sequelize": "^6.37.7",
+        "sqlite3": "^5.1.7"
+    }
+}
