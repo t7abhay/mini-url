@@ -35,4 +35,4 @@ export const healthCheck = async (req, res) => {
             message: "🍎 Service is running ..........!",
         })
     );
-}
+};
