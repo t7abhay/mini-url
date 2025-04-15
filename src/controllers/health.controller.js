@@ -1,7 +1,6 @@
 import { ApiResponse } from "../utilities/ApiResponse.js";
 
-import { asyncHandler } from "../utilities/asyncHandler.js";
-export const healthCheck = asyncHandler(async (req, res) => {
+export const healthCheck = async (req, res) => {
     const catInfo = {
         species: "Felis catus",
         domesticated: true,
@@ -36,4 +35,4 @@ export const healthCheck = asyncHandler(async (req, res) => {
             message: "🍎 Service is running ..........!",
         })
     );
-});
+}
