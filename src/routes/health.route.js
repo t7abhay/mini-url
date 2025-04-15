@@ -1,9 +1,9 @@
 import express from "express";
 
-import { servicePinger } from "../servicePinger.js";
+import { healthCheck } from "../controllers/health.controller.js";
 
 const router = express.Router();
 
-router.get("/health", servicePinger);
+router.get("/health", healthCheck);
 
 export default router;
