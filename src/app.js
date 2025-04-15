@@ -44,5 +44,7 @@ app.use(morgan("dev"));
 
 import urlRouter from "./routes/url.routes.js";
 import userRouter from "./routes/user.routes.js";
+import healthRouter from "./routes/health.route.js";
 app.use("/api/v1/", urlRouter);
 app.use("/api/v1/", userRouter);
+app.use("/api/v1/", healthRouter);
