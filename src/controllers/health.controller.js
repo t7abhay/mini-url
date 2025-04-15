@@ -1,6 +1,6 @@
 import { ApiResponse } from "../utilities/ApiResponse.js";
 import { ApiError } from "../utilities/ApiError.js";
-
+import { asyncHandler } from "../utilities/asyncHandler.js";
 export const healthCheck = asyncHandler(async (req, res) => {
     const catInfo = {
         species: "Felis catus",
