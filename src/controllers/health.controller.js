@@ -1,4 +1,4 @@
-import { ApiResopnse } from "../utilities/ApiResponse.js";
+import { ApiResponse } from "../utilities/ApiResponse.js";
 import { ApiError } from "../utilities/ApiError.js";
 
 export const healthCheck = asyncHandler(async (req, res) => {
@@ -35,7 +35,7 @@ export const healthCheck = asyncHandler(async (req, res) => {
         return res
             .status(200)
             .json(
-                new ApiResopnse(
+                new ApiResponse(
                     200,
                     catInfo,
                     "🍎 Service is running ..........!"
