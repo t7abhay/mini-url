@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 
 export const urlShortner = async (originalUrl) => {
     try {
-        const salt = crypto.randomBytes(8).toString("hex");
+        const salt = crypto.randomBytes(9).toString("hex");
 
         const saltedUrl = originalUrl + salt;
 
