@@ -15,18 +15,18 @@ const limiter = rateLimit({
     legacyHeaders: false,
     message: "Rate limited",
 });
-// app.use(
-//     session({
-//         secret: process.env.SESSION_SECRET || "your-secret-key",
-//         resave: false,
-//         saveUninitialized: true,
-//         cookie: {
-//             secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-//             httpOnly: true,
-//             maxAge: 1000 * 60 * 60 * 24, // 1 day
-//         },
-//     })
-// );
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET || "your-secret-key",
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+            secure: process.env.NODE_ENV === "production", 
+            httpOnly: true,
+            maxAge: 1000 * 60 * 60 * 24, // 1 day
+        },
+    })
+);
 
 const corsConfig = {
     origin: process.env.CORS_ORIGIN,

@@ -1,4 +1,4 @@
-import { asyncHandler } from "../utilities/asynchandler.js";
+import { asyncHandler } from "../utilities/asyncHandler.js";
 import { ApiResponse } from "../utilities/ApiResponse.js";
 import { ApiError } from "../utilities/ApiError.js";
 import { urlShortner } from "../utilities/urlShortner.js";
