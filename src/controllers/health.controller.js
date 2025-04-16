@@ -40,6 +40,7 @@ export const healthCheck = async (req, res) => {
 
 import { ApiResponse } from "../utilities/ApiResponse.js";
 export const healthCheck = async (req, res) => {
+    console.log(`health requested ${"🍎🍎🍎🍎🍎"}`);
     return res
         .status(200)
         .json(

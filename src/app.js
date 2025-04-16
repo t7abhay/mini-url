@@ -10,16 +10,6 @@ import memorystore from "memorystore";
 const MemoryStore = memorystore(session);
 
 export const app = express();
-app.use(
-    session({
-        cookie: { maxAge: 86400000 },
-        store: new MemoryStore({
-            checkPeriod: 86400000, // prune expired entries every 24h
-        }),
-        resave: false,
-        secret: "keyboard cat",
-    })
-);
 
 app.set("trust proxy", 1); // Fixes the express-rate-limit error
 
@@ -32,13 +22,14 @@ const limiter = rateLimit({
 });
 app.use(
     session({
-        secret: process.env.SESSION_SECRET || "your-secret-key",
+        secret: process.env.SESSION_SECRET || "keyboard cat",
         resave: false,
         saveUninitialized: true,
+        store: new MemoryStore({ checkPeriod: 86400000 }),
         cookie: {
             secure: process.env.NODE_ENV === "production",
             httpOnly: true,
-            maxAge: 1000 * 60 * 60 * 24, // 1 day
+            maxAge: 86400000, // 1 day
         },
     })
 );
@@ -60,6 +51,7 @@ app.use(cookieParser());
 import urlRouter from "./routes/url.routes.js";
 import userRouter from "./routes/user.routes.js";
 import healthRouter from "./routes/health.routes.js";
+
 app.use("/api/v1/", urlRouter);
 app.use("/api/v1/", userRouter);
 app.use("/api/v1/", healthRouter);
