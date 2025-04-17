@@ -50,10 +50,10 @@ export const loginUser = asyncHandler(async (req, res) => {
         const setCookies = authResponse.headers["set-cookie"];
 
         const options = {
-            httpOnly: true,
-            secure: true,
-            sameSite: "None",
-        };
+            // httpOnly: true,
+            // secure: true,
+            // sameSite: "None",
+        };z
 
         if (setCookies && Array.isArray(setCookies)) {
             setCookies.forEach((cookieStr) => {
@@ -68,7 +68,7 @@ export const loginUser = asyncHandler(async (req, res) => {
             .status(200)
             .json(new ApiResponse(200, user, "Login successful"));
     } catch (error) {
-        console.log(error);
+        console.error(error);
         const status = error.response?.status || 500;
         const message = error.response?.data?.message || "Login failed";
         return res.status(status).json({ status, message });
@@ -107,4 +107,56 @@ export const logOutUser = asyncHandler((req, res) => {
             const message = error.response?.data?.message || "Logout failed";
             return res.status(status).json({ status, message });
         });
+});
+
+export const changePasword = asyncHandler(async (req, res) => {
+    const { newPassword, currentPassword } = sanitizeInput(req.body);
+
+    if (!newPassword || !currentPassword) {
+        throw new ApiError(400, "All fields are required");
+    }
+
+    const data = { newPassword, currentPassword };
+
+    try {
+        const authResponse = await axiosInstance.post(
+            "/change-password",
+            data,
+            {
+                headers: {
+                    // Authorization: req.cookies.accessToken,
+                    Authorization: `Bearer ${req.cookies.accessToken}`,
+                },
+                withCredentials: true,
+            }
+        );
+
+        const user = authResponse.data?.data?.user;
+        const setCookies = authResponse.headers["set-cookie"];
+
+        const options = {
+            httpOnly: true,
+            secure: true,
+            sameSite: "None",
+        };
+
+        if (setCookies && Array.isArray(setCookies)) {
+            setCookies.forEach((cookieStr) => {
+                const parsed = cookie.parse(cookieStr);
+                for (const [name, value] of Object.entries(parsed)) {
+                    res.cookie(name, value, options);
+                }
+            });
+        }
+
+        return res
+            .status(200)
+            .json(new ApiResponse(200, user, "Password Changed"));
+    } catch (error) {
+        console.log(error);
+        const status = error.response?.status || 500;
+        const message =
+            error.response?.data?.message || "Password change failed";
+        return res.status(status).json({ status, message });
+    }
 });
