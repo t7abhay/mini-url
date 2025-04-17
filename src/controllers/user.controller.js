@@ -33,7 +33,7 @@ export const registerUser = asyncHandler(async (req, res, next) => {
 });
 
 export const loginUser = asyncHandler(async (req, res) => {
-    const { email, password } = saniti  eInput(req.body);
+    const { email, password } = sanitizeInput(req.body);
 
     if (!email || !password) {
         throw new ApiError(400, "All fields are required");
