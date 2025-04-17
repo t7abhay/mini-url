@@ -33,7 +33,7 @@ export const registerUser = asyncHandler(async (req, res, next) => {
 });
 
 export const loginUser = asyncHandler(async (req, res) => {
-    const { email, password } = sanitizeInput(req.body);
+    const { email, password } = saniti  eInput(req.body);
 
     if (!email || !password) {
         throw new ApiError(400, "All fields are required");
@@ -53,7 +53,7 @@ export const loginUser = asyncHandler(async (req, res) => {
             // httpOnly: true,
             // secure: true,
             // sameSite: "None",
-        };z
+        };
 
         if (setCookies && Array.isArray(setCookies)) {
             setCookies.forEach((cookieStr) => {
@@ -124,7 +124,6 @@ export const changePasword = asyncHandler(async (req, res) => {
             data,
             {
                 headers: {
-                    // Authorization: req.cookies.accessToken,
                     Authorization: `Bearer ${req.cookies.accessToken}`,
                 },
                 withCredentials: true,
