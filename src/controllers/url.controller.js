@@ -76,7 +76,13 @@ export const createShortURL = asyncHandler(async (req, res) => {
     if (alreadyExists) {
         return res
             .status(200)
-            .json(new ApiResponse(200, {}, "Short url already exists "));
+            .json(
+                new ApiResponse(
+                    200,
+                    alreadyExists.shortenedUrl,
+                    "Short url already exists "
+                )
+            );
     }
 
     const shortenedUrl = await urlShortner(originalUrl);
@@ -139,4 +145,19 @@ export const redirectToOriginalUrl = asyncHandler(async (req, res) => {
 
 export const getAllShortURLs = asyncHandler(async (req, res) => {
     const userId = req.user.id;
+
+    const allUrls = await ShortUrl.find(
+        { userId: userId },
+        { originalUrl: 1, shortenedUrl: 1, _id: 1 }
+    );
+
+    if (!allUrls) {
+        return res
+            .status(404)
+            .json(new ApiError(400, "User does not have short urls"));
+    }
+
+    return res
+        .status(201)
+        .json(new ApiResponse(201, allUrls, "Fetched all urls successfully"));
 });
