@@ -5,8 +5,6 @@ import { urlShortner } from "../utilities/urlShortner.js";
 import { ShortUrl } from "../models/url.model.js";
 import { valKey } from "../utilities/caching.js";
 
-
-
 export const createShortURL = asyncHandler(async (req, res) => {
     const { originalUrl } = req.body;
     const userId = req.user?.id;
@@ -104,6 +102,9 @@ export const redirectToOriginalUrl = asyncHandler(async (req, res) => {
 
 export const getAllShortURLs = asyncHandler(async (req, res) => {
     const userId = req.user.id;
+    if (!userId) {
+        return res.status(401).json(new ApiError(401, "Unauthorized"));
+    }
 
     const allUrls = await ShortUrl.find(
         { userId: userId },
