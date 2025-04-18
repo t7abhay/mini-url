@@ -6,7 +6,7 @@ const { Schema } = mongoose;
 const urlSchema = new Schema(
     {
         userId: {
-            type: String,
+            type: UUID,
             required: true,
         },
         originalUrl: {
