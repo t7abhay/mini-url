@@ -7,7 +7,7 @@ import {
 import { verifyUser } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
-router.get("/all-url/:userId", verifyUser, getAllShortURLs);
+router.get("/all-urls/:userId", verifyUser, getAllShortURLs);
 router.post("/shorten-url", verifyUser, createShortURL);
 
 router.get("/:shortId", redirectToOriginalUrl);
