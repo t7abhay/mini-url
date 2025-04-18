@@ -1,9 +1,14 @@
 import mongoose from "mongoose";
+import { UUID } from "sequelize";
 
 const { Schema } = mongoose;
 
 const urlSchema = new Schema(
     {
+        userId: {
+            type: String,
+            required: true,
+        },
         originalUrl: {
             type: String,
             required: true,

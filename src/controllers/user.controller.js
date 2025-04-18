@@ -46,26 +46,29 @@ export const loginUser = asyncHandler(async (req, res) => {
             withCredentials: true,
         });
 
-        const user = authResponse.data?.data?.user;
-        const setCookies = authResponse.headers["set-cookie"];
+        const accessToken = authResponse.data?.data.accessToken;
+        const refreshToken = authResponse.data?.data.refreshToken;
+        const user = authResponse?.data?.data?.user;
 
         const options = {
-            // httpOnly: true,
-            // secure: true,
-            // sameSite: "None",
+            httpOnly: true,
+            secure: true,
+            sameSite: "None",
         };
 
-        if (setCookies && Array.isArray(setCookies)) {
-            setCookies.forEach((cookieStr) => {
-                const parsed = cookie.parse(cookieStr);
-                for (const [name, value] of Object.entries(parsed)) {
-                    res.cookie(name, value, options);
-                }
-            });
-        }
+        // if (setCookies && Array.isArray(setCookies)) {
+        //     setCookies.forEach((cookieStr) => {
+        //         const parsed = cookie.parse(cookieStr);
+        //         for (const [name, value] of Object.entries(parsed)) {
+        //             res.cookie(name, value, options);
+        //         }
+        //     });
+        // }
 
         return res
             .status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshTokens", refreshToken, options)
             .json(new ApiResponse(200, user, "Login successful"));
     } catch (error) {
         console.error(error);
