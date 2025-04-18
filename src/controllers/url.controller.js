@@ -131,10 +131,6 @@ export const redirectToOriginalUrl = asyncHandler(async (req, res) => {
     // existingUrl contains entire Mongo document object, hence just extracted whats required aka originalUrl
     const redirectionUrl = existingUrl.originalUrl;
 
-    if (!existingUrl) {
-        throw new ApiError(404, "Short URL does not exists");
-    }
-
     console.log("redirected freshly");
     await valKey.set(`short:${shortId}`, redirectionUrl, "EX", 43200);
 
