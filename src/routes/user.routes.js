@@ -6,6 +6,7 @@ import {
     logOutUser,
     changePasword,
 } from "../controllers/user.controller.js";
+
 const router = express.Router();
 
 router.post("/register", registerUser);
