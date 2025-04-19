@@ -54,11 +54,11 @@ export const loginUser = asyncHandler(async (req, res) => {
             roleId: authResponse?.data?.data.user.roleId,
             roleName: authResponse?.data?.data.user.role.roleName,
         };
-        /* chanage on  deployment */
+
         const options = {
             httpOnly: true,
-            secure: false,
-            sameSite: "None",
+            secure: true,
+            sameSite: "lax",
         };
 
         return res
