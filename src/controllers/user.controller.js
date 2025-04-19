@@ -51,8 +51,8 @@ export const loginUser = asyncHandler(async (req, res) => {
         const loggedInUser = authResponse?.data?.data;
         const options = {
             httpOnly: true,
-            secure: true,
-            sameSite: "Lax",
+            secure: false,
+            sameSite: "None",
         };
 
         return res
