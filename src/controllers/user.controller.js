@@ -49,6 +49,8 @@ export const loginUser = asyncHandler(async (req, res) => {
         const accessToken = authResponse.data?.data.accessToken;
         const refreshToken = authResponse.data?.data.refreshToken;
         const loggedInUser = authResponse?.data?.data;
+
+        /* chanage on  deployment */
         const options = {
             httpOnly: true,
             secure: false,
@@ -140,7 +142,6 @@ export const changePasword = asyncHandler(async (req, res) => {
                 }
             });
         }
-
         return res
             .status(200)
             .json(new ApiResponse(200, user, "Password Changed"));
