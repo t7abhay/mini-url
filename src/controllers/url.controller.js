@@ -102,6 +102,7 @@ export const redirectToOriginalUrl = asyncHandler(async (req, res) => {
 
 export const getAllShortURLs = asyncHandler(async (req, res) => {
     const userId = req.user.id;
+
     if (!userId) {
         return res.status(401).json(new ApiError(401, "Unauthorized"));
     }
