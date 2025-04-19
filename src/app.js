@@ -12,6 +12,7 @@ const MemoryStore = memorystore(session);
 export const app = express();
 
 app.set("trust proxy", 1); // Fixes the express-rate-limit error
+app.use(morgan("dev"));
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -45,13 +46,12 @@ app.use(cors(corsConfig));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
-app.use(morgan("dev"));
 app.use(cookieParser());
 
 import urlRouter from "./routes/url.routes.js";
 import userRouter from "./routes/user.routes.js";
 import healthRouter from "./routes/health.routes.js";
 
+app.use("/api/v1/", userRouter);
 app.use("/api/v1/", healthRouter);
 app.use("/api/v1/", urlRouter);
-app.use("/api/v1/", userRouter);

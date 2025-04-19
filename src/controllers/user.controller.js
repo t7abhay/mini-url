@@ -48,8 +48,12 @@ export const loginUser = asyncHandler(async (req, res) => {
 
         const accessToken = authResponse.data?.data.accessToken;
         const refreshToken = authResponse.data?.data.refreshToken;
-        const loggedInUser = authResponse?.data?.data;
 
+        const user = {
+            username: authResponse?.data?.data.user.username,
+            roleId: authResponse?.data?.data.user.roleId,
+            roleName: authResponse?.data?.data.user.role.roleName,
+        };
         /* chanage on  deployment */
         const options = {
             httpOnly: true,
@@ -61,7 +65,7 @@ export const loginUser = asyncHandler(async (req, res) => {
             .status(200)
             .cookie("refreshToken", refreshToken, options)
             .cookie("accessToken", accessToken, options)
-            .json(new ApiResponse(200, loggedInUser, "Login successful"));
+            .json(new ApiResponse(200, user, "Login successful"));
     } catch (error) {
         console.error(error);
         const status = error.response?.status || 500;
