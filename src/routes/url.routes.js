@@ -3,13 +3,14 @@ import {
     createShortURL,
     redirectToOriginalUrl,
     getAllShortURLs,
+    deleteUrl,
 } from "../controllers/url.controller.js";
 import { verifyUser } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
-router.get("/all-urls/", verifyUser, getAllShortURLs);
+router.get("/all-urls", verifyUser, getAllShortURLs);
 router.post("/shorten-url", verifyUser, createShortURL);
 
-router.get("/:shortId", redirectToOriginalUrl);
-
+router.delete("/delete-url/:shortId", verifyUser, deleteUrl);
+router.get("/s/:shortId", redirectToOriginalUrl);
 export default router;

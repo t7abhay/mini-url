@@ -6,7 +6,6 @@ import { sanitizeInput } from "../utilities/sanitizeInput.js";
 import cookie from "cookie";
 export const registerUser = asyncHandler(async (req, res, next) => {
     const { username, email, password } = sanitizeInput(req.body);
-
     if (!email || !password || !username) {
         throw new ApiError(400, "All fields are required");
     }
@@ -58,7 +57,9 @@ export const loginUser = asyncHandler(async (req, res) => {
         const options = {
             httpOnly: true,
             secure: true,
-            sameSite: "lax",
+            sameSite: "None",
+            path: "/",
+            maxAge: 3600000, // 1 hour
         };
 
         return res
@@ -150,10 +151,49 @@ export const changePasword = asyncHandler(async (req, res) => {
             .status(200)
             .json(new ApiResponse(200, user, "Password Changed"));
     } catch (error) {
-        console.log(error);
+        console.error(error);
         const status = error.response?.status || 500;
         const message =
             error.response?.data?.message || "Password change failed";
+        return res.status(status).json({ status, message });
+    }
+});
+
+export const fetchProfile = asyncHandler(async (req, res) => {
+    try {
+        const authResponse = await axiosInstance.get("/profile", {
+            headers: {
+                Authorization: `Bearer ${req.cookies.accessToken}`,
+            },
+            withCredentials: true,
+        });
+
+        const userPorfile = {
+            username: authResponse.data.data.username,
+            email: authResponse.data.data.email,
+            createdAt: authResponse.data.data.createdAt,
+            roleId: authResponse.data.data.roleId,
+            roleName: authResponse.data.data.role.roleName,
+        };
+
+        const options = {
+            httpOnly: true,
+            secure: true,
+            sameSite: "None",
+            path: "/",
+            maxAge: 3600000, // 1 hour
+        };
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(200, userPorfile, "Profile fetched successfuly")
+            );
+    } catch (error) {
+        console.error(error);
+        const status = error.response?.status || 500;
+        const message =
+            error.response?.data?.message || "Failed to fetch profile";
         return res.status(status).json({ status, message });
     }
 });

@@ -11,8 +11,8 @@ const MemoryStore = memorystore(session);
 
 export const app = express();
 
-app.set("trust proxy", 1); // Fixes the express-rate-limit error
 app.use(morgan("dev"));
+app.set("trust proxy", 1); // Fixes the express-rate-limit error
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -28,7 +28,7 @@ app.use(
         saveUninitialized: true,
         store: new MemoryStore({ checkPeriod: 86400000 }),
         cookie: {
-            secure: process.env.NODE_ENV === "production",
+            secure: process.env.NODE_ENV === "production" || "development",
             httpOnly: true,
             maxAge: 86400000, // 1 day
         },
@@ -36,7 +36,7 @@ app.use(
 );
 
 const corsConfig = {
-    origin: process.env.CORS_ORIGIN,
+    origin: process.env.CORS_ORIGIN || "http://localhost:8080",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
 };

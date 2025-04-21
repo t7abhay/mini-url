@@ -122,3 +122,28 @@ export const getAllShortURLs = asyncHandler(async (req, res) => {
         .status(201)
         .json(new ApiResponse(201, allUrls, "Fetched all urls successfully"));
 });
+
+export const deleteUrl = asyncHandler(async (req, res) => {
+    const shortIdOfUrlToDelete = req.params.shortId;
+    console.log("Short ID to delete:", shortIdOfUrlToDelete);
+
+    if (!shortIdOfUrlToDelete || typeof shortIdOfUrlToDelete !== "string") {
+        return res
+            .status(400)
+            .json(new ApiError(400, "No valid short URL ID provided"));
+    }
+
+    const deletedDoc = await ShortUrl.findOneAndDelete({
+        shortenedUrl: shortIdOfUrlToDelete,
+    });
+
+    if (!deletedDoc) {
+        return res.status(404).json(new ApiError(404, "Short URL not found"));
+    }
+
+    res.status(200).json({
+        success: true,
+        message: "Short URL deleted successfully",
+        deletedData: deletedDoc,
+    });
+});

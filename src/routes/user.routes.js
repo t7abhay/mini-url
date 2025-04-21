@@ -5,10 +5,11 @@ import {
     loginUser,
     logOutUser,
     changePasword,
+    fetchProfile,
 } from "../controllers/user.controller.js";
 
 const router = express.Router();
-
+router.get("/me/profile", fetchProfile);
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", logOutUser);
