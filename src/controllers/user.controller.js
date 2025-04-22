@@ -65,18 +65,17 @@ export const loginUser = asyncHandler(async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         };
 
-        res.cookie("refreshToken", refreshToken, cookieOptions)
-            .status(200)
-            .json(
-                new ApiResponse(
-                    200,
-                    {
-                        user,
-                        accessToken,
-                    },
-                    "Login successful"
-                )
-            );
+        res.cookie("refreshToken", refreshToken, cookieOptions);
+        res.cookie("accessToken", accessToken, cookieOptions).status(200).json(
+            new ApiResponse(
+                200,
+                {
+                    user,
+                    accessToken,
+                },
+                "Login successful"
+            )
+        );
     } catch (error) {
         console.error(error);
         const status = error.response?.status || 500;
