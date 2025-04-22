@@ -28,7 +28,7 @@ app.use(
         saveUninitialized: true,
         store: new MemoryStore({ checkPeriod: 86400000 }),
         cookie: {
-            secure: process.env.NODE_ENV === "production" || "development",
+            secure: process.env.NODE_ENV === "production",
             httpOnly: true,
             maxAge: 86400000, // 1 day
         },
@@ -36,7 +36,8 @@ app.use(
 );
 
 const corsConfig = {
-    origin: process.env.CORS_ORIGIN || "http://localhost:8080",
+    origin: process.env.CORS_ORIGIN,
+    secure: true,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
 };

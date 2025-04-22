@@ -38,12 +38,14 @@ export const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All fields are required");
     }
 
-    const data = { email, password };
-
     try {
-        const authResponse = await axiosInstance.post("/login", data, {
-            withCredentials: true,
-        });
+        const authResponse = await axiosInstance.post(
+            "/login",
+            { email, password },
+            {
+                withCredentials: true,
+            }
+        );
 
         const accessToken = authResponse.data?.data.accessToken;
         const refreshToken = authResponse.data?.data.refreshToken;
@@ -54,19 +56,27 @@ export const loginUser = asyncHandler(async (req, res) => {
             roleName: authResponse?.data?.data.user.role.roleName,
         };
 
-        const options = {
+        const cookieOptions = {
             httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
             secure: true,
-            sameSite: "None",
-            path: "/",
-            maxAge: 3600000, // 1 hour
+            sameSite: "lax",
+
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         };
 
-        return res
+        res.cookie("refreshToken", refreshToken, cookieOptions)
             .status(200)
-            .cookie("refreshToken", refreshToken, options)
-            .cookie("accessToken", accessToken, options)
-            .json(new ApiResponse(200, user, "Login successful"));
+            .json(
+                new ApiResponse(
+                    200,
+                    {
+                        user,
+                        accessToken,
+                    },
+                    "Login successful"
+                )
+            );
     } catch (error) {
         console.error(error);
         const status = error.response?.status || 500;
@@ -176,14 +186,6 @@ export const fetchProfile = asyncHandler(async (req, res) => {
             roleName: authResponse.data.data.role.roleName,
         };
 
-        const options = {
-            httpOnly: true,
-            secure: true,
-            sameSite: "None",
-            path: "/",
-            maxAge: 3600000, // 1 hour
-        };
-
         return res
             .status(200)
             .json(
@@ -195,5 +197,36 @@ export const fetchProfile = asyncHandler(async (req, res) => {
         const message =
             error.response?.data?.message || "Failed to fetch profile";
         return res.status(status).json({ status, message });
+    }
+});
+
+export const refreshToken = asyncHandler(async (req, res) => {
+    try {
+        console.log(req.cookies.refreshToken);
+        const response = await axiosInstance.post(
+            "http://localhost:5839/api/v1/auth/v/refreshToken",
+            {},
+            {
+                headers: {
+                    Cookie: `refreshToken=${req.cookies.refreshToken}`,
+                },
+            },
+            { withCredentials: true }
+        );
+
+        const newAccessToken = response.data.accessToken;
+
+        res.cookie("accessToken", newAccessToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "None",
+        }).json({
+            accessToken: newAccessToken,
+        });
+    } catch (error) {
+        const status = error.response?.status || 500;
+        const message =
+            error.response?.data?.message || "Failed to refresh token";
+        res.status(status).json({ status, message });
     }
 });
