@@ -59,7 +59,7 @@ export const loginUser = asyncHandler(async (req, res) => {
         const cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            secure: true,
+            // secure: true,
             sameSite: "None",
 
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
@@ -177,7 +177,7 @@ export const fetchProfile = asyncHandler(async (req, res) => {
             withCredentials: true,
         });
 
-        const userPorfile = {
+        const userProfile = {
             username: authResponse.data.data.username,
             email: authResponse.data.data.email,
             createdAt: authResponse.data.data.createdAt,
@@ -188,7 +188,11 @@ export const fetchProfile = asyncHandler(async (req, res) => {
         return res
             .status(200)
             .json(
-                new ApiResponse(200, userPorfile, "Profile fetched successfuly")
+                new ApiResponse(
+                    200,
+                    userProfile,
+                    "Profile fetched successfully"
+                )
             );
     } catch (error) {
         console.error(error);
@@ -201,16 +205,15 @@ export const fetchProfile = asyncHandler(async (req, res) => {
 
 export const refreshToken = asyncHandler(async (req, res) => {
     try {
-        console.log(req.cookies.refreshToken);
         const response = await axiosInstance.post(
-            "http://localhost:5839/api/v1/auth/v/refreshToken",
+            "/v/refreshToken",
             {},
             {
                 headers: {
                     Cookie: `refreshToken=${req.cookies.refreshToken}`,
                 },
-            },
-            { withCredentials: true }
+                withCredentials: true,
+            }
         );
 
         const newAccessToken = response.data.accessToken;
