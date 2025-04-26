@@ -118,7 +118,7 @@ export const logOutUser = asyncHandler((req, res) => {
         });
 });
 
-export const changePasword = asyncHandler(async (req, res) => {
+export const changePassword = asyncHandler(async (req, res) => {
     const { newPassword, currentPassword } = sanitizeInput(req.body);
 
     if (!newPassword || !currentPassword) {

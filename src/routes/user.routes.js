@@ -4,7 +4,7 @@ import {
     registerUser,
     loginUser,
     logOutUser,
-    changePasword,
+    changePassword,
     fetchProfile,
     refreshToken,
 } from "../controllers/user.controller.js";
@@ -14,7 +14,7 @@ router.get("/me/profile", fetchProfile);
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", logOutUser);
-router.post("/change-password", changePasword);
+router.post("/change-password", changePassword);
 router.post("/v/refreshToken", refreshToken);
 
 export default router;
