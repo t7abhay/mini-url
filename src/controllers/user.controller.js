@@ -180,9 +180,6 @@ export const fetchProfile = asyncHandler(async (req, res) => {
         const userProfile = {
             username: authResponse.data.data.username,
             email: authResponse.data.data.email,
-            createdAt: authResponse.data.data.createdAt,
-            roleId: authResponse.data.data.roleId,
-            roleName: authResponse.data.data.role.roleName,
         };
 
         return res
