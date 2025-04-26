@@ -78,12 +78,10 @@ export const redirectToOriginalUrl = asyncHandler(async (req, res) => {
 
     const cachedUrl = await valKey.get(`short:${shortId}`);
     if (cachedUrl) {
-        return res.redirect(301, cachedUrl);
+        return res.status(200).json({ url: cachedUrl });
     }
 
-    const alreadyExists = await ShortUrl.findOne({
-        shortenedUrl: shortId,
-    });
+    const alreadyExists = await ShortUrl.findOne({ shortenedUrl: shortId });
 
     if (!alreadyExists) {
         return res
@@ -91,13 +89,11 @@ export const redirectToOriginalUrl = asyncHandler(async (req, res) => {
             .json(new ApiError(404, "Short URL does not exist"));
     }
 
-    // alreadyExists contains entire Mongo document object, hence just extracted whats required aka originalUrl
     const redirectionUrl = alreadyExists.originalUrl;
 
-    console.log("redirected freshly");
     await valKey.set(`short:${shortId}`, redirectionUrl, "EX", 43200);
 
-    return res.status(301).redirect(redirectionUrl);
+    return res.status(200).json({ url: redirectionUrl });
 });
 
 export const getAllShortURLs = asyncHandler(async (req, res) => {
