@@ -12,5 +12,5 @@ router.get("/all-urls", verifyUser, getAllShortURLs);
 router.post("/shorten-url", verifyUser, createShortURL);
 
 router.delete("/delete-url/:shortId", verifyUser, deleteUrl);
-router.get("/:shortId", redirectToOriginalUrl);
+router.get("/r/:shortId", redirectToOriginalUrl);
 export default router;

@@ -38,6 +38,7 @@
         "pg-hstore": "^2.3.4",
         "response-time": "^2.3.3",
         "sequelize": "^6.37.7",
-        "sqlite3": "^5.1.7"
+        "sqlite3": "^5.1.7",
+        "zod": "^3.24.3"
     }
 }

@@ -4,9 +4,10 @@ import { ApiError } from "../utilities/ApiError.js";
 import { urlShortner } from "../utilities/urlShortner.js";
 import { ShortUrl } from "../models/url.model.js";
 import { valKey } from "../utilities/caching.js";
-
+import { isValidUrl } from "../utilities/urlValidator.js";
 export const createShortURL = asyncHandler(async (req, res) => {
     const { originalUrl } = req.body;
+
     const userId = req.user?.id;
 
     if (!userId) {
@@ -16,6 +17,9 @@ export const createShortURL = asyncHandler(async (req, res) => {
     }
 
     if (!originalUrl || typeof originalUrl !== "string") {
+        return res.status(400).json(new ApiError(400, "No valid URL provided"));
+    }
+    if (!isValidUrl(originalUrl)) {
         return res.status(400).json(new ApiError(400, "No valid URL provided"));
     }
 
@@ -32,10 +36,10 @@ export const createShortURL = asyncHandler(async (req, res) => {
 
     if (alreadyExists) {
         return res
-            .status(200)
+            .status(302)
             .json(
                 new ApiResponse(
-                    200,
+                    302,
                     alreadyExists.shortenedUrl,
                     "Short url already exists "
                 )
@@ -69,6 +73,7 @@ export const createShortURL = asyncHandler(async (req, res) => {
 
 export const redirectToOriginalUrl = asyncHandler(async (req, res) => {
     const { shortId } = req.params;
+    console.log(shortId);
 
     if (!shortId || typeof shortId !== "string") {
         return res

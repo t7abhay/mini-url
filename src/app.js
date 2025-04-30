@@ -11,16 +11,32 @@ const MemoryStore = memorystore(session);
 
 export const app = express();
 
+const corsConfig = {
+    origin: process.env.CORS_ORIGIN,
+
+    credentials: true,
+
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsConfig));
+app.use(cookieParser());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(morgan("dev"));
-app.set("trust proxy", 1); // Fixes the express-rate-limit error
+
+app.set("trust proxy", 1);
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     limit: 100, // Limit each IP to 100 requests per window
     standardHeaders: "draft-8",
     legacyHeaders: false,
-    message: "Rate limited",
+    message: "Rate limited ⏱",
 });
+
+const isProduction = process.env.NODE_ENV === "production";
 app.use(
     session({
         secret: process.env.SESSION_SECRET || "keyboard cat",
@@ -28,26 +44,15 @@ app.use(
         saveUninitialized: true,
         store: new MemoryStore({ checkPeriod: 86400000 }),
         cookie: {
-            secure: process.env.NODE_ENV === "production",
+            secure: isProduction,
+            sameSite: isProduction ? "None" : "Lax",
             httpOnly: true,
-            maxAge: 86400000, // 1 day
+            maxAge: 86400000,
         },
     })
 );
 
-const corsConfig = {
-    origin: process.env.CORS_ORIGIN,
-    secure: true,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-};
-
 app.use(limiter);
-app.use(cors(corsConfig));
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ extended: true, limit: "50mb" }));
-
-app.use(cookieParser());
 
 import urlRouter from "./routes/url.routes.js";
 import userRouter from "./routes/user.routes.js";

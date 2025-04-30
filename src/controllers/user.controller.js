@@ -6,6 +6,7 @@ import { sanitizeInput } from "../utilities/sanitizeInput.js";
 import cookie from "cookie";
 export const registerUser = asyncHandler(async (req, res, next) => {
     const { username, email, password } = sanitizeInput(req.body);
+
     if (!email || !password || !username) {
         throw new ApiError(400, "All fields are required");
     }
@@ -52,16 +53,17 @@ export const loginUser = asyncHandler(async (req, res) => {
 
         const user = {
             username: authResponse?.data?.data.user.username,
+            email: authResponse?.data?.data.user.email,
             roleId: authResponse?.data?.data.user.roleId,
             roleName: authResponse?.data?.data.user.role.roleName,
         };
 
+        const isProduction = process.env.NODE_ENV === "production";
+
         const cookieOptions = {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            // secure: true,
-            sameSite: "None",
-
+            secure: isProduction,
+            sameSite: isProduction ? "None" : "Lax",
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         };
 
@@ -71,7 +73,6 @@ export const loginUser = asyncHandler(async (req, res) => {
                 200,
                 {
                     user,
-                    accessToken,
                 },
                 "Login successful"
             )
@@ -180,6 +181,8 @@ export const fetchProfile = asyncHandler(async (req, res) => {
         const userProfile = {
             username: authResponse.data.data.username,
             email: authResponse.data.data.email,
+            roleId: authResponse.data.data.roleId,
+            roleName: authResponse.data.data.roleName,
         };
 
         return res
