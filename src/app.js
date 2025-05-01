@@ -44,10 +44,7 @@ app.use(
         saveUninitialized: true,
         store: new MemoryStore({ checkPeriod: 86400000 }),
         cookie: {
-            secure: isProduction,
-            sameSite: isProduction ? "None" : "Lax",
-            httpOnly: true,
-            maxAge: 86400000,
+            partitioned: true,
         },
     })
 );
