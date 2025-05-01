@@ -41,10 +41,12 @@ app.use(
     session({
         secret: process.env.SESSION_SECRET || "keyboard cat",
         resave: false,
-        saveUninitialized: true,
+        saveUninitialized: false,
         store: new MemoryStore({ checkPeriod: 86400000 }),
         cookie: {
-            partitioned: true,
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: isProduction ? "None" : "Lax",
         },
     })
 );
